@@ -1,0 +1,129 @@
+Demultiplexing - First asssignment
+Part 2:
+
+Define problem:
+    Reads contain matched pair indexes, index hops, and poor quality/unknown indexes. The index matched reads 
+    need to be sorted into separate files for each index pair, index hopped reads need to be sorted into their own, and unknown/poor quality
+    indexes need to be sorted into their own files.
+
+Useful Output:
+    Two files for each index matched pair, one forward and one reverse. 
+    Two files for index hopped pairs, one forward and one reverse.
+    Two files for low quality/unknown index pairs, one forward and one reverse.
+    Total for 24 indexes: 52 fastq files
+    Stats file containing contents of a permutations dictionary 
+    Counts for the three different types of reads 
+
+
+To code:
+
+--------------------------------------------
+
+def get_args():
+'''adds argparse arguments to run script from the command line'''
+
+    •Add argument to input file for read1
+    •Add argument to input file for read2
+    •Add argument to input file for read3
+    •Add argument to input file for read4
+
+    return parser.args()
+
+---------------------------------------------
+
+def convert_phred(qscore):
+    '''Takes a single letter phred score and coverts it to a number, phred-33 only'''
+
+    •Use function to convert qscore letter (ASCII) from FASTQ quality line to decimal
+    •Subtract 33 to get correct qscore value (phred_int)
+
+    return phred_int
+
+#Example:
+Input: I
+Expected output: 40
+---------------------------------------------
+
+
+def create_index_dicts(input_file):
+    '''opens file that contains indexes, make keys from indexes with empty string as value'''
+    '''create second dictionary of reverse complements'''
+
+    •Reads through the file indexes.txt, stores the index sequences as keys in a dictionary (index_dict) and their other
+    information (sample, group, treatment, index) as the value for that key. 
+    •Take dictionary and covert keys to their reverse complement. Save these to a new dictionary (comp_dict) with 
+    values of ""
+
+    return index_dict, comp_dict
+
+#Example: index_dict, comp_dict = create_index_dicts(input_file)
+Input: "index_file.fastq"
+Expected output: {"CCGATTAG": [1, 2A, control, B1], "GGTTCCAA":, [2, 2B, control, A5]}, {"CTAATCGG": "", "TTGGAACC": ""}
+
+---------------------------------------------
+
+def create_perm_dict(index_dict, comp_dict):
+    '''uses itertools to create dictionary of all possible permutations of the indexes in the index dictionary and complement dictionary'''
+
+    •Create index pairs in the format "index1-index2" from all possible permutations using the keys of index_dict as index1
+    and keys of comp_dict as index2 
+    • Make each pair the key in a dictionary and the initial value 0
+
+    return perm_dict
+
+---------------------------------------------
+
+def create_files(index_dict):
+'''creates output files for index matched reads using index dictionary'''
+
+    •uses information in index dictionary vaules (list of identifiers) to create files with correct names
+    •Loop through values in index dictionary, for each value:
+        •create initial file name by separating each element in list by an underscore 
+        •add R1 and R2 to the initial file name to create a file for forward reads and a file for reverse reads
+        •open file
+
+    return None
+
+---------------------------------------------
+
+open 5 hardcoded files (index hopped read1 and read2, unknown/bad quality read1 and read2, stats file)
+
+---------------------------------------------
+
+def sort_indexes(index_dict, comp_dict, r1_file, r2_file, r3_file, r4_file, score_cutoff):
+    '''uses fastq files containing reads 1-4 and sorts the records into new files for each index, also sorts out index hopped reads
+    and reads with poor quality/unknown indexes into their own files'''
+    '''also creates a dictionary of permutations of the index pairs'''
+
+    •Open the four read files
+    •Create three counters initialized at 0 for index matched reads, index hopped reads, and reads with unknown/poor quality 
+    •Loop through each file one record at a time
+        • Concatenate indexes from R2 and R3 file into format "index1-index2" and save as variable index_pair
+        • Add 1 to the permutation dictionary value for the key matching index_pair
+        •If index in read2 file is in the index dictionary AND index in read3 file is in the reverse complement dictionary AND index1 is equal to index2:
+            •Compute average quality score of index1 and index2 using convert_phred
+            •If quality score of index1 is greater than cutoff AND quality score of index2 is greater than cutoff:
+                #This creates output files for reads with dual matched indexes of good quality
+                • Add 1 to index matched read counter
+                • Append the header of read1 record and index_pair to a line in the forward output file
+                • Append the rest of the record from read2 into forward output file
+                • Repeat these two steps for reverse file (using read4 record)
+        •Else if index in read2 file is in the index dictionary AND index in read3 file is in the reverse complement dictionary:
+            •Compute average quality score of index1 and index2 using convert_phred
+            •If quality score of index1 is greater than cutoff AND quality score of index2 is greater than cutoff:
+                #This creates output files for reads with hopped indexes of good quality
+                • Add 1 to index hopped read counter
+                • Append the header of read1 record and index_pair to a line in the forward output file
+                • Append the rest of the record from read2 into forward output file
+                • Repeat these two steps for reverse file (using read4 record)
+        •Else:
+            #This creates output files for unknown indexes or indexes of bad quality
+            • Add 1 to unknown/bad quality counter
+            • Append the header of read1 record and index_pair to a line in the forward output file
+            • Repeat these two steps for reverse file (using read4 record)
+
+    return perm_dict, matched_counter, hopped_counter, badeggs_counter
+
+
+
+
