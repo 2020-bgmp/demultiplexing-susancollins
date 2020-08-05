@@ -26,6 +26,7 @@ def get_args():
     •Add argument to input file for read2
     •Add argument to input file for read3
     •Add argument to input file for read4
+    •Add argument to input index information file
 
     return parser.args()
 
@@ -123,6 +124,14 @@ def sort_indexes(index_dict, comp_dict, r1_file, r2_file, r3_file, r4_file, scor
             • Repeat these two steps for reverse file (using read4 record)
 
     return perm_dict, matched_counter, hopped_counter, badeggs_counter
+
+---------------------------------------------
+
+•Add together counters to find total number of reads
+•Divide counters by total number of reads to find percentages for stats file
+•Write percentages to stats file
+•Write contents of permutations dictionary to stats file
+•Close all files
 
 
 
