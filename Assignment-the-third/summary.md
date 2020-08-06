@@ -1,4 +1,4 @@
-# Demultiplexing Summary  
+# Demultiplexing Results  
 
 ## Run information
 
@@ -10,7 +10,28 @@
 
 *Lane: 8*
 
+
+## Input Files
+
+**From Talapas Directory** `/projects/bgmp/shared/2017_sequencing`
+
+*FASTQ files:*
+
+`1294_S1_L008_R1_001.fastq.gz`
+
+`1294_S1_L008_R1_001.fastq.gz`
+
+`1294_S1_L008_R1_001.fastq.gz`
+
+`1294_S1_L008_R1_001.fastq.gz`
+
+*Indexes/sample names:*
+
+`indexes.txt`
+
 ---
+
+## Summary
 
 | Index Pair Type | Count | Percent of All Reads |
 |---|---|---|
