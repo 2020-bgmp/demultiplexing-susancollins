@@ -30,6 +30,7 @@
 >The low quality bin can easily undergo further parsing/error correction if more reads are required.
 
 ---
+## Reads per Sample
 
 | Sample | Group | Treatment | Index | Percentage of Reads |
 |---|---|---|---|---|
@@ -57,3 +58,19 @@
 | 31 | 4F | fox | A7 | 0.94 |
 | 32 | 4G | both | B10 | 2.86 |
 | 34 | 4H | both | A8 | 2.22 |
+
+---
+
+## Output File Information
+
+*demulti.sh* - python script used to bin reads
+
+*demultiplex.srun* - slurm script used to run demulti.sh on Talapas
+
+*sorted_permutations.tsv* - tab separated file containing all permutations of known index-pairs and their corresponding read counts 
+
+*stats.txt* - summary information output from python script, supplied here above
+
+**FASTQ files can be found here:**
+
+`/projects/bgmp/scollin3/bioinformatics/Bi622/demultiplexing-susancollins/Assignment-the-third`
