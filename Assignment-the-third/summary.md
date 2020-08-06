@@ -19,7 +19,7 @@
 | Bad Quality | 26964891 | 7.42% |
 | Unknown | 30783962 | 8.47% |
 
-**Total paired reads from all samples: 363246735**
+**Total paired reads from all samples:** 363246735
 
 ---
 
@@ -71,6 +71,6 @@
 
 *stats.txt* - summary information output from python script, supplied here above
 
-**FASTQ files can be found here:**
+**Output FASTQ files can be found here:**
 
 `/projects/bgmp/scollin3/bioinformatics/Bi622/demultiplexing-susancollins/Assignment-the-third`
