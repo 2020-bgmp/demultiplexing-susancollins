@@ -29,7 +29,6 @@
 
 `indexes.txt`
 
----
 
 ## Summary
 
@@ -42,7 +41,6 @@
 
 **Total paired reads from all samples:** 363246735
 
----
 
 >**Quality Score Cutoff: 30**
 >
@@ -50,7 +48,6 @@
 >This high cutoff was used to ensure 99.9% accuracy in the index base calls, allowing for high confidence in the identification of reads in downstream analysis.
 >The low quality bin can easily undergo further parsing/error correction if more reads are required.
 
----
 ## Reads per Sample
 
 | Sample | Group | Treatment | Index | Percentage of Reads |
@@ -80,7 +77,6 @@
 | 32 | 4G | both | B10 | 2.86 |
 | 34 | 4H | both | A8 | 2.22 |
 
----
 
 ## Output File Information
 
