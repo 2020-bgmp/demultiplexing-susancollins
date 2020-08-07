@@ -1,0 +1,128 @@
+--------
+28.7.2020
+--------
+-files: (found on talapas here: /projects/bgmp/shared/2017_sequencing/)
+    1294_S1_L008_R1_001.fastq.gz
+    1294_S1_L008_R2_001.fastq.gz
+    1294_S1_L008_R3_001.fastq.gz
+    1294_S1_L008_R4_001.fastq.gz
+-index file:
+    /projects/bgmp/shared/2017_sequencing/indexes.txt
+-created test files with 16 lines each for the read fastq files
+-can be found here:
+    /projects/bgmp/scollin3/bioinformatics/Bi622
+
+-figured out that indexes supplied are rev comp... so read2 = index list and read3 must be converted
+-note: unknown/low quality includes all reads with one or two unknown/low quality
+
+--------
+30.7.2020
+--------
+
+- ran slurm script to make histogram from first index file..found out that the script was trying to save my figure to the wrong location
+- altered base_dist.sh script to include output file name as an argument
+
+--------
+31.7.2020
+--------
+
+- testing out how to find number of indexes containing N 
+    zcat 1294_S1_L008_R2_001.fastq.gz | sed -n '2~4p' | grep -e "N" | wc -l
+        3976613     
+    zcat 1294_S1_L008_R3_001.fastq.gz | sed -n '2~4p' | grep -e "N" | wc -l
+        3328051
+    zcat 1294_S1_L008_R2_001.fastq.gz 1294_S1_L008_R3_001.fastq.gz | sed -n '2~4p' | grep -e "N" | wc -l
+        7304664
+
+--------
+3.8.2020
+--------
+
+-added a list of all open matched output files so that I can easily close them all at the end
+-note to self: think about how to structure permutation dictionary, currently will only work if I flip indexes in the header lines to 
+both be in the same direction
+- chose not to use, but in case I need to go back:
+        #for row in itertools.zip(r1, r2, i1, i2):
+        #line_r1 = row[0].strip()
+        #line_r2 = row[1].strip()
+        #line_i1 = row[2].strip()
+        #line_i2 = row[3].strip()
+-researched how to use itertools.islice and incorporated into code to break file into chucks of 4 lines aka records
+- TO Fix: still getting an extra empty list at the end of the records...not sure how to fix yet
+- IMPORTANT: need to add in gzip once using real files
+- TO ADD: would like to add functionality to convertphred function to find average score and use boolean if score is above or below cutoff value
+
+--------
+4.8.2020
+--------
+
+- found the number of records in the r2 file:
+    zcat 1294_S1_L008_R2_001.fastq.gz | grep -e "^@" | wc -l
+        363246735
+- realized that the extra empty list was causing an error that prohibited my files from closing at the end of the sort_indexes function
+- would like to find a better way to solve this problem later... for now I added an argparse argument for number of records in the file
+- changed permutations dictionary to include forward and reverse index pairs
+- started slurm script to run overnight
+
+--------
+5.8.2020
+--------
+- script took 9 hours just to do the file parsing....woah....something's not right...
+- it finished parsing and began zipping before it was cancelled for hitting 10h time limit
+- now I am zipping the rest of the files in an interactive session on Talapas
+
+	Command being timed: "./demulti.sh -r1 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R1_001.fastq.gz -r2 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R2_001.fastq.gz -r3 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R3_001.fastq.gz -r4 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R4_001.fastq.gz -i /projects/bgmp/shared/2017_sequencing/indexes.txt -c 30 -n 363246735"
+	User time (seconds): 33140.42
+	System time (seconds): 75.40
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 9:16:46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 126576
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4211052
+	Voluntary context switches: 179434
+	Involuntary context switches: 99554
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+slurmstepd: error: *** JOB 12643721 ON n225 CANCELLED AT 2020-08-05T08:12:45 DUE TO TIME LIMIT ***
+
+- editing test script to add more stats information and will rerun real script after testing of new features
+- also believe permuations dictionary was not counting.. fixed in test file
+- decided to flip second index to be rev comp of index 1 to make permutations dictionary smaller
+- sorted permutations file:
+    cat permutations.tsv | (sed -u 1q; sort -k2 -n -r) > sorted_permutations.tsv
+
+- time for second run:
+    	Command being timed: "./demulti.sh -r1 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R1_001.fastq.gz -r2 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R2_001.fastq.gz -r3 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R3_001.fastq.gz -r4 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R4_001.fastq.gz -i /projects/bgmp/shared/2017_sequencing/indexes.txt -c 30 -n 363246735"
+	User time (seconds): 7362.44
+	System time (seconds): 70.25
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:05:41
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 126392
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2994735
+	Voluntary context switches: 96337
+	Involuntary context switches: 19826
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
